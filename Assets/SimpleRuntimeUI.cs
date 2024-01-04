@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using LiveAwareLabs;
 
 public class SimpleRuntimeUI : MonoBehaviour {
   private VisualElement before;
@@ -46,6 +47,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void OnInitializeClicked(ClickEvent clickEvent) {
+    RecorderPlugin.Initialize(useBackgroundModeToggle.value);
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
     string message = "Initialized";
@@ -56,6 +58,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void OnStartClicked(ClickEvent clickEvent) {
+    RecorderPlugin.StartStreaming(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value);
     statusLabel.text = "Streaming";
     string message = "Started streaming ";
     if (string.IsNullOrEmpty(eventInput.text)) {
@@ -73,10 +76,12 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void OnClipClicked(ClickEvent clickEvent) {
+    RecorderPlugin.Clip();
     Debug.Log("Created clip");
   }
 
   private void OnStopClicked(ClickEvent clickEvent) {
+    RecorderPlugin.StopStreaming();
     statusLabel.text = "Idle";
     string message = "Stopped streaming ";
     if (string.IsNullOrEmpty(eventInput.text)) {
