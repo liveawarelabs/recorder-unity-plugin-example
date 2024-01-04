@@ -1,8 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement style="flex-grow: 1;">
-        <ui:Label text="This is a Label" display-tooltip-when-elided="true" />
-        <ui:Button text="This is a Button" display-tooltip-when-elided="true" name="button" />
-        <ui:Toggle label="Display the counter?" name="toggle" />
-        <ui:TextField picking-mode="Ignore" label="Text Field" text="filler text" name="input-message" />
+        <ui:Label text="Idle" display-tooltip-when-elided="true" style="align-self: center;" />
+        <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
+        <ui:Button text="Clip" display-tooltip-when-elided="true" name="clip" />
+        <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
+        <ui:TextField picking-mode="Ignore" label="Event name:" name="event" />
+        <ui:Toggle label="Camera" name="toggle" value="true" />
+        <ui:Toggle label="Microphone" name="toggle" value="true" />
     </ui:VisualElement>
 </ui:UXML>

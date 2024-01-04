@@ -2,37 +2,44 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class SimpleRuntimeUI : MonoBehaviour {
-  private Button _button;
-  private Toggle _toggle;
+  private Button startButton;
+  private Button clipButton;
+  private Button stopButton;
 
-  private int _clickCount;
-
-  //Add logic that interacts with the UI controls in the `OnEnable` methods
   private void OnEnable() {
-    // The UXML is already instantiated by the UIDocument component
     var uiDocument = GetComponent<UIDocument>();
-
-    _button = uiDocument.rootVisualElement.Q("button") as Button;
-    _toggle = uiDocument.rootVisualElement.Q("toggle") as Toggle;
-
-    _button.RegisterCallback<ClickEvent>(PrintClickMessage);
-
-    var _inputFields = uiDocument.rootVisualElement.Q("input-message");
-    _inputFields.RegisterCallback<ChangeEvent<string>>(InputMessage);
+    startButton = uiDocument.rootVisualElement.Q("start") as Button;
+    clipButton = uiDocument.rootVisualElement.Q("clip") as Button;
+    stopButton = uiDocument.rootVisualElement.Q("stop") as Button;
+    startButton.RegisterCallback<ClickEvent>(OnStartClicked);
+    clipButton.RegisterCallback<ClickEvent>(OnClipClicked);
+    stopButton.RegisterCallback<ClickEvent>(OnStopClicked);
+    var eventInput = uiDocument.rootVisualElement.Q("event");
+    eventInput.RegisterCallback<ChangeEvent<string>>(OnEventChanged);
   }
 
   private void OnDisable() {
-    _button.UnregisterCallback<ClickEvent>(PrintClickMessage);
+    stopButton.UnregisterCallback<ClickEvent>(OnStopClicked);
+    clipButton.UnregisterCallback<ClickEvent>(OnClipClicked);
+    startButton.UnregisterCallback<ClickEvent>(OnStartClicked);
   }
 
-  private void PrintClickMessage(ClickEvent evt) {
-    ++_clickCount;
-
-    Debug.Log($"{"button"} was clicked!" +
-            (_toggle.value ? " Count: " + _clickCount : ""));
+  private void OnStopClicked(ClickEvent evt) {
+    var element = (VisualElement)evt.target;
+    Debug.Log($"{element.name} was clicked!");
   }
 
-  public static void InputMessage(ChangeEvent<string> evt) {
+  private void OnClipClicked(ClickEvent evt) {
+    var element = (VisualElement)evt.target;
+    Debug.Log($"{element.name} was clicked!");
+  }
+
+  private void OnStartClicked(ClickEvent evt) {
+    var element = (VisualElement)evt.target;
+    Debug.Log($"{element.name} was clicked!");
+  }
+
+  public static void OnEventChanged(ChangeEvent<string> evt) {
     Debug.Log($"{evt.newValue} -> {evt.target}");
   }
 }
