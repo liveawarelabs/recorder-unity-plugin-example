@@ -1,11 +1,11 @@
+using System.Threading.Tasks;
+using LiveAwareLabs;
 using UnityEngine;
 using UnityEngine.UIElements;
-using LiveAwareLabs;
 
 public class SimpleRuntimeUI : MonoBehaviour {
   private VisualElement before;
   private VisualElement after;
-  private Toggle useBackgroundModeToggle;
   private Button initializeButton;
   private Label statusLabel;
   private Button startButton;
@@ -15,15 +15,15 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Toggle useCameraToggle;
   private Toggle useMicrophoneToggle;
   private Button resetButton;
+  private RecorderPlugin recorderPlugin;
 
   private void OnEnable() {
     var uiDocument = GetComponent<UIDocument>();
     before = uiDocument.rootVisualElement.Q("before");
     after = uiDocument.rootVisualElement.Q("after");
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-    useBackgroundModeToggle = (Toggle)uiDocument.rootVisualElement.Q("use-background-mode");
     initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
-    initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
+    initializeButton.RegisterCallback<ClickEvent>(OnInitializeClickedAsync);
     statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
     startButton = (Button)uiDocument.rootVisualElement.Q("start");
     clipButton = (Button)uiDocument.rootVisualElement.Q("clip");
@@ -43,22 +43,18 @@ public class SimpleRuntimeUI : MonoBehaviour {
     stopButton.UnregisterCallback<ClickEvent>(OnStopClicked);
     clipButton.UnregisterCallback<ClickEvent>(OnClipClicked);
     startButton.UnregisterCallback<ClickEvent>(OnStartClicked);
-    initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClicked);
+    initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClickedAsync);
   }
 
-  private void OnInitializeClicked(ClickEvent clickEvent) {
-    RecorderPlugin.Initialize(useBackgroundModeToggle.value);
+  private async void OnInitializeClickedAsync(ClickEvent clickEvent) {
+    recorderPlugin = await RecorderPlugin.CreateAsync();
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-    string message = "Initialized";
-    if (useBackgroundModeToggle.value) {
-      message += " in background mode";
-    }
-    Debug.Log(message);
+    Debug.Log("Initialized");
   }
 
   private void OnStartClicked(ClickEvent clickEvent) {
-    RecorderPlugin.StartStreaming(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value);
+    recorderPlugin.StartStreaming(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value);
     statusLabel.text = "Streaming";
     string message = "Started streaming ";
     if (string.IsNullOrEmpty(eventInput.text)) {
@@ -76,12 +72,12 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void OnClipClicked(ClickEvent clickEvent) {
-    RecorderPlugin.Clip();
+    recorderPlugin.CreateClip();
     Debug.Log("Created clip");
   }
 
   private void OnStopClicked(ClickEvent clickEvent) {
-    RecorderPlugin.StopStreaming();
+    recorderPlugin.StopStreaming();
     statusLabel.text = "Idle";
     string message = "Stopped streaming ";
     if (string.IsNullOrEmpty(eventInput.text)) {
