@@ -23,7 +23,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     after = uiDocument.rootVisualElement.Q("after");
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
-    initializeButton.RegisterCallback<ClickEvent>(OnInitializeClickedAsync);
+    initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
     statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
     startButton = (Button)uiDocument.rootVisualElement.Q("start");
     clipButton = (Button)uiDocument.rootVisualElement.Q("clip");
@@ -43,52 +43,59 @@ public class SimpleRuntimeUI : MonoBehaviour {
     stopButton.UnregisterCallback<ClickEvent>(OnStopClicked);
     clipButton.UnregisterCallback<ClickEvent>(OnClipClicked);
     startButton.UnregisterCallback<ClickEvent>(OnStartClicked);
-    initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClickedAsync);
+    initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClicked);
   }
 
-  private async void OnInitializeClickedAsync(ClickEvent clickEvent) {
+  private async void OnInitializeClicked(ClickEvent clickEvent) {
     recorderPlugin = await RecorderPlugin.CreateAsync();
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
     Debug.Log("Initialized");
   }
 
-  private void OnStartClicked(ClickEvent clickEvent) {
-    recorderPlugin.StartStreaming(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value);
-    statusLabel.text = "Streaming";
-    string message = "Started streaming ";
-    if (string.IsNullOrEmpty(eventInput.text)) {
-      message += "default event";
+  private async void OnStartClicked(ClickEvent clickEvent) {
+    if (await recorderPlugin.StartStreamingAsync(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
+      statusLabel.text = "Streaming";
+      string message = "Started streaming ";
+      if (string.IsNullOrEmpty(eventInput.text)) {
+        message += "default event";
+      } else {
+        message += $"event \"{eventInput.text}\"";
+      }
+      if (useCameraToggle.value) {
+        message += " with camera";
+      }
+      if (useMicrophoneToggle.value) {
+        message += " with microphone";
+      }
+      Debug.Log(message);
     } else {
-      message += $"event \"{eventInput.text}\"";
+      Debug.LogWarning("cannot start streaming");
     }
-    if (useCameraToggle.value) {
-      message += " with camera";
-    }
-    if (useMicrophoneToggle.value) {
-      message += " with microphone";
-    }
-    Debug.Log(message);
   }
 
-  private void OnClipClicked(ClickEvent clickEvent) {
-    recorderPlugin.CreateClip();
+  private async void OnClipClicked(ClickEvent clickEvent) {
+    await recorderPlugin.CreateClipAsync();
     Debug.Log("Created clip");
   }
 
-  private void OnStopClicked(ClickEvent clickEvent) {
-    recorderPlugin.StopStreaming();
-    statusLabel.text = "Idle";
-    string message = "Stopped streaming ";
-    if (string.IsNullOrEmpty(eventInput.text)) {
-      message += "default event";
+  private async void OnStopClicked(ClickEvent clickEvent) {
+    if (await recorderPlugin.StopStreamingAsync()) {
+      statusLabel.text = "Idle";
+      string message = "Stopped streaming ";
+      if (string.IsNullOrEmpty(eventInput.text)) {
+        message += "default event";
+      } else {
+        message += $"event \"{eventInput.text}\"";
+      }
+      Debug.Log(message);
     } else {
-      message += $"event \"{eventInput.text}\"";
+      Debug.LogWarning("cannot stop streaming");
     }
-    Debug.Log(message);
   }
 
-  private void OnResetClicked(ClickEvent clickEvent) {
+  private async void OnResetClicked(ClickEvent clickEvent) {
+    await recorderPlugin.DisposeAsync();
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
   }
