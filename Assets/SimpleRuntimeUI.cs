@@ -46,6 +46,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
     initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClicked);
   }
 
+  void OnGUI() {
+    statusLabel.text = recorderPlugin == null ? "Idle" : recorderPlugin.IsRecording ? "Recording" : "Connected";
+  }
+
   private async void OnInitializeClicked(ClickEvent clickEvent) {
     recorderPlugin = await RecorderPlugin.CreateAsync();
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
@@ -55,7 +59,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
   private async void OnStartClicked(ClickEvent clickEvent) {
     if (await recorderPlugin.StartStreamingAsync(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
-      statusLabel.text = "Streaming";
       string message = "Started streaming ";
       if (string.IsNullOrEmpty(eventInput.text)) {
         message += "default event";
@@ -81,7 +84,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
   private async void OnStopClicked(ClickEvent clickEvent) {
     if (await recorderPlugin.StopStreamingAsync()) {
-      statusLabel.text = "Idle";
       string message = "Stopped streaming ";
       if (string.IsNullOrEmpty(eventInput.text)) {
         message += "default event";
@@ -95,8 +97,9 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnResetClicked(ClickEvent clickEvent) {
-    await recorderPlugin.DisposeAsync();
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
+    await recorderPlugin.DisposeAsync();
+    recorderPlugin = null;
   }
 }
