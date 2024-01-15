@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using LiveAwareLabs;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -52,9 +51,24 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
   private async void OnInitializeClicked(ClickEvent clickEvent) {
     recorderPlugin = await RecorderPlugin.CreateAsync();
+    recorderPlugin.ClipCreated += RecorderPlugin_ClipCreated;
+    recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
+    recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
     before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
     Debug.Log("Initialized");
+  }
+
+  private void RecorderPlugin_ClipCreated(object sender, System.EventArgs e) {
+    Debug.Log("Clip created");
+  }
+
+  private void RecorderPlugin_IsRecordingChanged(object sender, System.EventArgs e) {
+    Debug.Log(recorderPlugin.IsRecording ? "Recording" : "Not recording");
+  }
+
+  private void RecorderPlugin_IsRunningChanged(object sender, System.EventArgs e) {
+    Debug.Log(recorderPlugin.IsRunning ? "Running" : "Not running");
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {
@@ -73,13 +87,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
       }
       Debug.Log(message);
     } else {
-      Debug.LogWarning("cannot start streaming");
+      Debug.LogWarning("Cannot start streaming");
     }
   }
 
   private async void OnClipClicked(ClickEvent clickEvent) {
     await recorderPlugin.CreateClipAsync();
-    Debug.Log("Created clip");
+    Debug.Log("Requested clip");
   }
 
   private async void OnStopClicked(ClickEvent clickEvent) {
@@ -92,7 +106,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
       }
       Debug.Log(message);
     } else {
-      Debug.LogWarning("cannot stop streaming");
+      Debug.LogWarning("Cannot stop streaming");
     }
   }
 
