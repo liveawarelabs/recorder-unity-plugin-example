@@ -92,8 +92,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnClipClicked(ClickEvent clickEvent) {
-    await recorderPlugin.CreateClipAsync();
-    Debug.Log("Requested clip");
+    if (await recorderPlugin.CreateClipAsync()) {
+      Debug.Log("Requested clip");
+    } else {
+      Debug.LogWarning("Cannot request clip");
+    }
   }
 
   private async void OnStopClicked(ClickEvent clickEvent) {
