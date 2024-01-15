@@ -1,3 +1,4 @@
+using System;
 using LiveAwareLabs;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -46,17 +47,22 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   void OnGUI() {
-    statusLabel.text = recorderPlugin == null ? "Idle" : recorderPlugin.IsRecording ? "Recording" : "Connected";
+    statusLabel.text = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
+      recorderPlugin.IsRecording ? "Recording" : "Connected" : "Disconnected";
   }
 
   private async void OnInitializeClicked(ClickEvent clickEvent) {
-    recorderPlugin = await RecorderPlugin.CreateAsync();
-    recorderPlugin.ClipCreated += RecorderPlugin_ClipCreated;
-    recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
-    recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
-    before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-    after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-    Debug.Log("Initialized");
+    try {
+      recorderPlugin = await RecorderPlugin.CreateAsync();
+      recorderPlugin.ClipCreated += RecorderPlugin_ClipCreated;
+      recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
+      recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
+      before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+      after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
+      Debug.Log("Initialized");
+    } catch (TimeoutException) {
+      Debug.LogError("Cannot connect with the Live Aware application");
+    }
   }
 
   private void RecorderPlugin_ClipCreated(object sender, System.EventArgs e) {
