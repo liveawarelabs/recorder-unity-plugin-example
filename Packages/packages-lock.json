@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.liveawarelabs.unity-plugin": {
+      "version": "file:../bin/com.liveawarelabs.recorder-plugin.tar.gz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "2.2.0",
       "depth": 0,
