@@ -7,7 +7,7 @@ This Unity project makes use of the Live Aware Labs Recorder Unity Plugin.
 1. Create a `bin` directory in this repository's directory.
 1. Copy the `com.liveawarelabs.recorder-plugin.tar.gz` into that directory.
 1. Open the project in Unity.
-1. Open the `SampleScene` scene in the `Assets` folder.
+1. Open the `SampleScene` scene in the `Assets/Scenes` folder.
 1. Exercise the project in play mode.
 
 ## API
