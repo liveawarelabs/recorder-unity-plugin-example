@@ -8,6 +8,7 @@
             <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
             <ui:Button text="Clip" display-tooltip-when-elided="true" name="clip" />
             <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
+            <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" />
             <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
             <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
                 <ui:Toggle value="true" name="use-camera" text="Camera" />

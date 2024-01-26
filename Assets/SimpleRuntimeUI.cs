@@ -11,6 +11,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Button startButton;
   private Button clipButton;
   private Button stopButton;
+  private TextField teamInput;
   private TextField eventInput;
   private Toggle useCameraToggle;
   private Toggle useMicrophoneToggle;
@@ -31,6 +32,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     startButton.RegisterCallback<ClickEvent>(OnStartClicked);
     clipButton.RegisterCallback<ClickEvent>(OnClipClicked);
     stopButton.RegisterCallback<ClickEvent>(OnStopClicked);
+    teamInput = (TextField)uiDocument.rootVisualElement.Q("team-name");
     eventInput = (TextField)uiDocument.rootVisualElement.Q("event-name");
     useCameraToggle = (Toggle)uiDocument.rootVisualElement.Q("use-camera");
     useMicrophoneToggle = (Toggle)uiDocument.rootVisualElement.Q("use-microphone");
@@ -78,12 +80,17 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {
-    if (await recorderPlugin.StartStreamingAsync(eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
-      string message = "Started streaming ";
-      if (string.IsNullOrEmpty(eventInput.text)) {
-        message += "default event";
+    if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
+      string message = "Started streaming";
+      if (string.IsNullOrEmpty(teamInput.text)) {
+        message += " default team";
       } else {
-        message += $"event \"{eventInput.text}\"";
+        message += $" team \"{teamInput.text}\"";
+      }
+      if (string.IsNullOrEmpty(eventInput.text)) {
+        message += " default event";
+      } else {
+        message += $" event \"{eventInput.text}\"";
       }
       if (useCameraToggle.value) {
         message += " with camera";
