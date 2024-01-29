@@ -11,8 +11,8 @@
             <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" />
             <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
             <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                <ui:Toggle value="true" name="use-camera" text="Camera" />
-                <ui:Toggle value="true" name="use-microphone" text="Microphone" />
+                <ui:Toggle value="false" name="use-camera" text="Camera" />
+                <ui:Toggle value="false" name="use-microphone" text="Microphone" />
             </ui:VisualElement>
             <ui:Button text="Reset" display-tooltip-when-elided="true" name="reset" />
         </ui:VisualElement>
