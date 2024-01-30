@@ -81,7 +81,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
   private async void OnStartClicked(ClickEvent clickEvent) {
     if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
-      string message = "Started streaming";
+      string message = "Requested to start streaming";
       if (string.IsNullOrEmpty(teamInput.text)) {
         message += " default team";
       } else {
@@ -114,7 +114,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
   private async void OnStopClicked(ClickEvent clickEvent) {
     if (await recorderPlugin.StopStreamingAsync()) {
-      string message = "Stopped streaming ";
+      string message = "Requested to stop streaming ";
       if (string.IsNullOrEmpty(eventInput.text)) {
         message += "default event";
       } else {
