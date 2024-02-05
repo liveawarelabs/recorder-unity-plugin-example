@@ -4,15 +4,22 @@
             <ui:Button text="Initialize" display-tooltip-when-elided="true" name="initialize" />
         </ui:VisualElement>
         <ui:VisualElement name="after" style="flex-grow: 1; display: flex;">
-            <ui:Label text="Idle" display-tooltip-when-elided="true" name="status" style="align-self: center;" />
-            <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
-            <ui:Button text="Clip" display-tooltip-when-elided="true" name="clip" />
-            <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
-            <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" />
-            <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                <ui:Toggle value="false" name="use-camera" text="Camera" />
-                <ui:Toggle value="false" name="use-microphone" text="Microphone" />
+            <ui:VisualElement style="flex-direction: row; justify-content: space-around;">
+                <ui:Label name="status" style="align-self: center;" />
+                <ui:Label name="mode" style="align-self: center;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="background" style="flex-grow: 1;">
+                <ui:Button text="Clip" display-tooltip-when-elided="true" name="clip" />
+            </ui:VisualElement>
+            <ui:VisualElement name="foreground" style="flex-grow: 1;">
+                <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
+                <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
+                <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" />
+                <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+                    <ui:Toggle value="false" name="use-camera" text="Camera" />
+                    <ui:Toggle value="false" name="use-microphone" text="Microphone" />
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:Button text="Reset" display-tooltip-when-elided="true" name="reset" />
         </ui:VisualElement>
