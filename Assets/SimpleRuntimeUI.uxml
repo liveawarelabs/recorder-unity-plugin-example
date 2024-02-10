@@ -4,16 +4,18 @@
             <ui:Button text="Initialize" display-tooltip-when-elided="true" name="initialize" />
         </ui:VisualElement>
         <ui:VisualElement name="after" style="flex-grow: 1; display: flex;">
-            <ui:VisualElement style="flex-direction: row; justify-content: space-around;">
-                <ui:Label name="status" style="align-self: center;" />
-                <ui:Label name="mode" style="align-self: center;" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+                <ui:Label name="status" text="Pending" style="align-self: center;" />
+                <ui:Button text="Pending" parse-escape-sequences="true" display-tooltip-when-elided="true" name="changeMode" />
             </ui:VisualElement>
             <ui:VisualElement name="background" style="flex-grow: 1;">
-                <ui:Button text="Clip" display-tooltip-when-elided="true" name="clip" />
+                <ui:Button text="Create Clip" display-tooltip-when-elided="true" name="clip" />
             </ui:VisualElement>
             <ui:VisualElement name="foreground" style="flex-grow: 1;">
-                <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
-                <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+                    <ui:Button text="Start" display-tooltip-when-elided="true" name="start" />
+                    <ui:Button text="Stop" display-tooltip-when-elided="true" name="stop" />
+                </ui:VisualElement>
                 <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" />
                 <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row;">

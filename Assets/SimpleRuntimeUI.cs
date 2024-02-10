@@ -11,7 +11,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private VisualElement foreground;
   private Button initializeButton;
   private Label statusLabel;
-  private Label modeLabel;
+  private Button changeModeButton;
   private Button startButton;
   private Button clipButton;
   private Button stopButton;
@@ -21,7 +21,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Toggle useMicrophoneToggle;
   private Button resetButton;
   private RecorderPlugin recorderPlugin;
-  private SynchronizationContext context;
 
   private void OnEnable() {
     var uiDocument = GetComponent<UIDocument>();
@@ -33,10 +32,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
     initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
     initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
     statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
-    modeLabel = (Label)uiDocument.rootVisualElement.Q("mode");
+    changeModeButton = (Button)uiDocument.rootVisualElement.Q("changeMode");
     startButton = (Button)uiDocument.rootVisualElement.Q("start");
     clipButton = (Button)uiDocument.rootVisualElement.Q("clip");
     stopButton = (Button)uiDocument.rootVisualElement.Q("stop");
+    changeModeButton.RegisterCallback<ClickEvent>(OnChangeModeClicked);
     startButton.RegisterCallback<ClickEvent>(OnStartClicked);
     clipButton.RegisterCallback<ClickEvent>(OnClipClicked);
     stopButton.RegisterCallback<ClickEvent>(OnStopClicked);
@@ -46,8 +46,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
     useMicrophoneToggle = (Toggle)uiDocument.rootVisualElement.Q("use-microphone");
     resetButton = (Button)uiDocument.rootVisualElement.Q("reset");
     resetButton.RegisterCallback<ClickEvent>(OnResetClicked);
-    // https://stackoverflow.com/a/68618405
-    context = SynchronizationContext.Current;
   }
 
   private void OnDisable() {
@@ -59,9 +57,21 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   void OnGUI() {
-    statusLabel.text = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
+    string state = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
       recorderPlugin.IsRecording ? "Recording" : "Connected" : "Disconnected";
-    modeLabel.text = recorderPlugin == null ? "" : recorderPlugin.IsInBackgroundMode ? "background" : "foreground";
+    string mode = recorderPlugin == null ? "" : recorderPlugin.IsInBackgroundMode ? "background" : "foreground";
+    statusLabel.text = $"{state}, in {mode}";
+    if (recorderPlugin != null) {
+      if (recorderPlugin.IsInBackgroundMode) {
+        background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
+        foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+        changeModeButton.text = "Enter foreground mode";
+      } else {
+        background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+        foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
+        changeModeButton.text = "Enter background mode";
+      }
+    }
   }
 
   private async void OnInitializeClicked(ClickEvent clickEvent) {
@@ -73,7 +83,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
       recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
       before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
       after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-      SetModeDisplay();
       Debug.Log("Initialized");
     } catch (TimeoutException) {
       Debug.LogError("Cannot connect with the Live Aware application");
@@ -81,30 +90,26 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void RecorderPlugin_IsInBackgroundModeChanged(object sender, EventArgs e) {
-    Debug.Log(recorderPlugin.IsInBackgroundMode ? "Background mode" : "Foreground mode");
-    context.Post((_) => SetModeDisplay(), null);
+    string mode = recorderPlugin.IsInBackgroundMode ? "back" : "fore";
+    Debug.Log($"Entered {mode}ground mode");
   }
 
-  private void SetModeDisplay() {
-    if (recorderPlugin.IsInBackgroundMode) {
-      background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-      foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-    } else {
-      background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-      foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-    }
-  }
-
-  private void RecorderPlugin_ClipCreated(object sender, System.EventArgs e) {
+  private void RecorderPlugin_ClipCreated(object sender, EventArgs e) {
     Debug.Log("Clip created");
   }
 
-  private void RecorderPlugin_IsRecordingChanged(object sender, System.EventArgs e) {
+  private void RecorderPlugin_IsRecordingChanged(object sender, EventArgs e) {
     Debug.Log(recorderPlugin.IsRecording ? "Recording" : "Not recording");
   }
 
-  private void RecorderPlugin_IsRunningChanged(object sender, System.EventArgs e) {
+  private void RecorderPlugin_IsRunningChanged(object sender, EventArgs e) {
     Debug.Log(recorderPlugin.IsRunning ? "Running" : "Not running");
+  }
+
+  private void OnChangeModeClicked(ClickEvent evt) {
+    recorderPlugin.ChangeModeAsync(!recorderPlugin.IsInBackgroundMode);
+    string mode = recorderPlugin.IsInBackgroundMode ? "fore" : "back";
+    Debug.Log($"Requested to change to {mode}ground mode");
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {
