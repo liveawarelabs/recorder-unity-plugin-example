@@ -13,7 +13,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Label statusLabel;
   private Button changeModeButton;
   private Button startButton;
-  private Button clipButton;
+  private Button sliceButton;
   private Button stopButton;
   private TextField teamInput;
   private TextField eventInput;
@@ -34,11 +34,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
     statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
     changeModeButton = (Button)uiDocument.rootVisualElement.Q("changeMode");
     startButton = (Button)uiDocument.rootVisualElement.Q("start");
-    clipButton = (Button)uiDocument.rootVisualElement.Q("clip");
+    sliceButton = (Button)uiDocument.rootVisualElement.Q("slice");
     stopButton = (Button)uiDocument.rootVisualElement.Q("stop");
     changeModeButton.RegisterCallback<ClickEvent>(OnChangeModeClicked);
     startButton.RegisterCallback<ClickEvent>(OnStartClicked);
-    clipButton.RegisterCallback<ClickEvent>(OnClipClicked);
+    sliceButton.RegisterCallback<ClickEvent>(OnSliceClicked);
     stopButton.RegisterCallback<ClickEvent>(OnStopClicked);
     teamInput = (TextField)uiDocument.rootVisualElement.Q("team-name");
     eventInput = (TextField)uiDocument.rootVisualElement.Q("event-name");
@@ -51,7 +51,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private void OnDisable() {
     resetButton.UnregisterCallback<ClickEvent>(OnResetClicked);
     stopButton.UnregisterCallback<ClickEvent>(OnStopClicked);
-    clipButton.UnregisterCallback<ClickEvent>(OnClipClicked);
+    sliceButton.UnregisterCallback<ClickEvent>(OnSliceClicked);
     startButton.UnregisterCallback<ClickEvent>(OnStartClicked);
     initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClicked);
   }
@@ -77,7 +77,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private async void OnInitializeClicked(ClickEvent clickEvent) {
     try {
       recorderPlugin = await RecorderPlugin.CreateAsync();
-      recorderPlugin.ClipCreated += RecorderPlugin_ClipCreated;
+      recorderPlugin.SliceCreated += RecorderPlugin_SliceCreated;
       recorderPlugin.IsInBackgroundModeChanged += RecorderPlugin_IsInBackgroundModeChanged;
       recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
       recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
@@ -94,8 +94,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
     Debug.Log($"Entered {mode}ground mode");
   }
 
-  private void RecorderPlugin_ClipCreated(object sender, EventArgs e) {
-    Debug.Log("Clip created");
+  private void RecorderPlugin_SliceCreated(object sender, EventArgs e) {
+    Debug.Log("Slice created");
   }
 
   private void RecorderPlugin_IsRecordingChanged(object sender, EventArgs e) {
@@ -137,11 +137,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
   }
 
-  private async void OnClipClicked(ClickEvent clickEvent) {
-    if (await recorderPlugin.CreateClipAsync()) {
-      Debug.Log("Requested clip");
+  private async void OnSliceClicked(ClickEvent clickEvent) {
+    if (await recorderPlugin.CreateSliceAsync()) {
+      Debug.Log("Requested slice");
     } else {
-      Debug.LogWarning("Cannot request clip");
+      Debug.LogWarning("Cannot request slice");
     }
   }
 

@@ -6,10 +6,10 @@
         <ui:VisualElement name="after" style="flex-grow: 1; display: flex;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
                 <ui:Label name="status" text="Pending" style="align-self: center;" />
-                <ui:Button text="Pending" parse-escape-sequences="true" display-tooltip-when-elided="true" name="changeMode" />
+                <ui:Button text="Pending" display-tooltip-when-elided="true" name="changeMode" />
             </ui:VisualElement>
             <ui:VisualElement name="background" style="flex-grow: 1;">
-                <ui:Button text="Create Clip" display-tooltip-when-elided="true" name="clip" />
+                <ui:Button text="Create Slice" display-tooltip-when-elided="true" name="slice" />
             </ui:VisualElement>
             <ui:VisualElement name="foreground" style="flex-grow: 1;">
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
