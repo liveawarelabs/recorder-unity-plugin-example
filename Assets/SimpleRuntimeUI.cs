@@ -62,6 +62,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     string mode = recorderPlugin == null ? "" : recorderPlugin.IsInBackgroundMode ? "background" : "foreground";
     statusLabel.text = $"{state}, in {mode}";
     if (recorderPlugin != null) {
+      resetButton.text = recorderPlugin.IsRunning ? "Disconnect from Live Aware" : "Reset";
       if (recorderPlugin.IsInBackgroundMode) {
         background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
         foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
