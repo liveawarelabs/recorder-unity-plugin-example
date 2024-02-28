@@ -12,5 +12,5 @@ This Unity project makes use of the Live Aware Labs Recorder Unity Plugin.
 
 ## API
 
-See the [API documentation](Library/PackageCache/com.liveawarelabs.unity-plugin\@a908d695d358/liveawarelabs.recorderplugin.md)
+See the [API documentation](docs/liveawarelabs.recorderplugin.md)
 for all classes, methods, and properties after installing the plug-in.
