@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using LiveAwareLabs;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,6 +18,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private TextField eventInput;
   private Toggle useCameraToggle;
   private Toggle useMicrophoneToggle;
+  private Toggle goLiveToggle;
   private Button resetButton;
   private RecorderPlugin recorderPlugin;
 
@@ -44,6 +44,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     eventInput = (TextField)uiDocument.rootVisualElement.Q("event-name");
     useCameraToggle = (Toggle)uiDocument.rootVisualElement.Q("use-camera");
     useMicrophoneToggle = (Toggle)uiDocument.rootVisualElement.Q("use-microphone");
+    goLiveToggle = (Toggle)uiDocument.rootVisualElement.Q("go-live");
     resetButton = (Button)uiDocument.rootVisualElement.Q("reset");
     resetButton.RegisterCallback<ClickEvent>(OnResetClicked);
   }
@@ -61,6 +62,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
       recorderPlugin.IsRecording ? "Recording" : "Connected" : "Disconnected";
     string mode = recorderPlugin == null ? "" : recorderPlugin.IsInBackgroundMode ? "background" : "foreground";
     statusLabel.text = $"{state}, in {mode}";
+    if (goLiveToggle.value) {
+      startButton.text = "GO LIVE";
+      stopButton.text = "End Stream";
+    } else {
+      startButton.text = "Start Recording";
+      stopButton.text = "Stop Recording";
+    }
     if (recorderPlugin != null) {
       resetButton.text = recorderPlugin.IsRunning ? "Disconnect from Live Aware" : "Reset";
       if (recorderPlugin.IsInBackgroundMode) {
@@ -114,7 +122,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {
-    if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
+    if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, live: goLiveToggle.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
       string message = "Requested to start streaming";
       if (string.IsNullOrEmpty(teamInput.text)) {
         message += " default team";

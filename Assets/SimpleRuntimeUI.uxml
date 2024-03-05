@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/LA-Styles.uss?fileID=7433441132597879392&amp;guid=f4e0e7f44f79bb342a0638e7d5985e5c&amp;type=3#LA-Styles" />
     <ui:VisualElement style="flex-grow: 1; bottom: 0; justify-content: flex-end; max-width: 70%; align-self: center; align-items: stretch; min-width: 70%; height: auto; position: absolute; background-color: rgba(39, 39, 42, 0.89); color: rgb(255, 255, 255); border-radius: 8px 8px 0 0;">
-        <ui:VisualElement name="before" style="flex-grow: 1;" class="sdk-window" >
+        <ui:VisualElement name="before" class="sdk-window" style="flex-grow: 1;">
             <ui:Button text="Initialize Live Aware" display-tooltip-when-elided="true" name="initialize" class="secondary-button" />
         </ui:VisualElement>
-        <ui:VisualElement name="after" style="flex-grow: 1; display: flex;" class="sdk-window" >
+        <ui:VisualElement name="after" class="sdk-window" style="flex-grow: 1; display: flex;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
                 <ui:Label name="status" text="Pending" style="align-self: center;" />
                 <ui:Button text="Pending" display-tooltip-when-elided="true" name="changeMode" />
@@ -16,8 +16,9 @@
                 <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" class="la-text-entry" />
                 <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
                 <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                    <ui:Toggle value="false" name="use-camera" text="Camera" />
-                    <ui:Toggle value="false" name="use-microphone" text="Microphone" />
+                    <ui:Toggle name="use-camera" text="Camera" />
+                    <ui:Toggle name="use-microphone" text="Microphone" />
+                    <ui:Toggle name="go-live" text="Go live" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
