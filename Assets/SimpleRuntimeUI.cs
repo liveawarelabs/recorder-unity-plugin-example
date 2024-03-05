@@ -83,6 +83,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
   }
 
+  private void OnApplicationQuit() {
+    Debug.Log("quitting");
+    _ = recorderPlugin?.DisposeAsync();
+  }
+
   private async void OnInitializeClicked(ClickEvent clickEvent) {
     try {
       recorderPlugin = await RecorderPlugin.CreateAsync();
