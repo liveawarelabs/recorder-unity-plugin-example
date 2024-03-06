@@ -21,6 +21,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Toggle goLiveToggle;
   private Button resetButton;
   private RecorderPlugin recorderPlugin;
+  private DateTime? streamingStartTime;
 
   private void OnEnable() {
     var uiDocument = GetComponent<UIDocument>();
@@ -127,6 +128,9 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {
+    if (goLiveToggle.value) {
+      streamingStartTime = DateTime.Now;
+    }
     if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, live: goLiveToggle.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
       string message = "Requested to start streaming";
       if (string.IsNullOrEmpty(teamInput.text)) {
@@ -160,6 +164,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private async void OnStopClicked(ClickEvent clickEvent) {
+    if (streamingStartTime != null && DateTime.Now - streamingStartTime < TimeSpan.FromSeconds(15)) {
+      // Live streaming must last at least fifteen seconds or the stream will fail.  This is a known issue.
+      return;
+    }
+    streamingStartTime = null;
     if (await recorderPlugin.StopStreamingAsync()) {
       string message = "Requested to stop streaming ";
       if (string.IsNullOrEmpty(eventInput.text)) {
