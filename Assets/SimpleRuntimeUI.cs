@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 public class SimpleRuntimeUI : MonoBehaviour {
   private VisualElement before;
   private VisualElement after;
-  private VisualElement background;
-  private VisualElement foreground;
   private Button initializeButton;
   private Label statusLabel;
   private Button changeModeButton;
@@ -27,8 +25,6 @@ public class SimpleRuntimeUI : MonoBehaviour {
     var uiDocument = GetComponent<UIDocument>();
     before = uiDocument.rootVisualElement.Q("before");
     after = uiDocument.rootVisualElement.Q("after");
-    background = uiDocument.rootVisualElement.Q("background");
-    foreground = uiDocument.rootVisualElement.Q("foreground");
     after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
     initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
     initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
@@ -61,8 +57,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
   void OnGUI() {
     string state = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
       recorderPlugin.IsRecording ? "Recording" : "Connected" : "Disconnected";
-    string mode = recorderPlugin == null ? "" : recorderPlugin.IsInBackgroundMode ? "background" : "foreground";
-    statusLabel.text = $"{state}, in {mode}";
+    string mode = recorderPlugin != null && recorderPlugin.IsBuffering ? ", buffering" : "";
+    statusLabel.text = $"{state}{mode}";
     if (goLiveToggle.value) {
       startButton.text = "GO LIVE";
       stopButton.text = "End Stream";
@@ -72,14 +68,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
     if (recorderPlugin != null) {
       resetButton.text = recorderPlugin.IsRunning ? "Disconnect from Live Aware" : "Reset";
-      if (recorderPlugin.IsInBackgroundMode) {
-        background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-        foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-        changeModeButton.text = "Enter foreground mode";
+      if (recorderPlugin.IsBuffering) {
+        changeModeButton.text = "Stop buffering";
       } else {
-        background.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-        foreground.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
-        changeModeButton.text = "Enter background mode";
+        changeModeButton.text = "Start buffering";
       }
     }
   }
@@ -93,7 +85,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     try {
       recorderPlugin = await RecorderPlugin.CreateAsync();
       recorderPlugin.SliceCreated += RecorderPlugin_SliceCreated;
-      recorderPlugin.IsInBackgroundModeChanged += RecorderPlugin_IsInBackgroundModeChanged;
+      recorderPlugin.IsBufferingChanged += RecorderPlugin_IsBufferingChanged;
       recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
       recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
       before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
@@ -104,9 +96,9 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
   }
 
-  private void RecorderPlugin_IsInBackgroundModeChanged(object sender, EventArgs e) {
-    string mode = recorderPlugin.IsInBackgroundMode ? "back" : "fore";
-    Debug.Log($"Entered {mode}ground mode");
+  private void RecorderPlugin_IsBufferingChanged(object sender, EventArgs e) {
+    string mode = recorderPlugin.IsBuffering ? "en" : "dis";
+    Debug.Log($"Buffering {mode}abled");
   }
 
   private void RecorderPlugin_SliceCreated(object sender, EventArgs e) {
@@ -122,9 +114,9 @@ public class SimpleRuntimeUI : MonoBehaviour {
   }
 
   private void OnChangeModeClicked(ClickEvent evt) {
-    recorderPlugin.ChangeModeAsync(!recorderPlugin.IsInBackgroundMode);
-    string mode = recorderPlugin.IsInBackgroundMode ? "fore" : "back";
-    Debug.Log($"Requested to change to {mode}ground mode");
+    recorderPlugin.ChangeBufferingAsync(!recorderPlugin.IsBuffering);
+    string mode = recorderPlugin.IsBuffering ? "dis" : "en";
+    Debug.Log($"Requested to {mode}able buffering");
   }
 
   private async void OnStartClicked(ClickEvent clickEvent) {

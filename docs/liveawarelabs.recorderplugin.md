@@ -17,6 +17,19 @@ You must invoke the [RecorderPlugin.DisposeAsync()](./liveawarelabs.recorderplug
 
 ## Properties
 
+### **IsBuffering**
+
+Specifies whether or not the LiveAware Desktop Recorder is buffering. The value of this property is invalid if the
+ recorder is not running.
+
+```csharp
+public bool IsBuffering { get; private set; }
+```
+
+#### Property Value
+
+[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+
 ### **IsRecording**
 
 Specifies whether or not the LiveAware Desktop Recorder is currently recording or streaming. The value of this property is
@@ -36,19 +49,6 @@ Specifies whether or not the LiveAware Desktop Recorder is currently running.
 
 ```csharp
 public bool IsRunning { get; private set; }
-```
-
-#### Property Value
-
-[Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
-
-### **IsInBackgroundMode**
-
-Specifies whether or not the LiveAware Desktop Recorder is in background mode. The value of this property is invalid if
- the recorder is not running.
-
-```csharp
-public bool IsInBackgroundMode { get; private set; }
 ```
 
 #### Property Value
@@ -131,18 +131,18 @@ True if request sent successfully, false otherwise.
 [IOException](https://docs.microsoft.com/en-us/dotnet/api/system.io.ioexception)<br>
 Thrown if communication with the recorder is interrupted.
 
-### **ChangeModeAsync(Boolean)**
+### **ChangeBufferingAsync(Boolean)**
 
-Send a message to the recorder to change the mode.
+Send a message to the recorder to change buffering.
 
 ```csharp
-public Task ChangeModeAsync(bool wantsBackgroundMode)
+public Task ChangeBufferingAsync(bool wantsBuffering)
 ```
 
 #### Parameters
 
-`wantsBackgroundMode` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
-Whether or not to enter background mode.
+`wantsBuffering` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+Whether or not to enable buffering.
 
 #### Returns
 
@@ -186,28 +186,20 @@ A task that represents the asynchronous dispose operation.
 
 ## Events
 
-### **SliceCreated**
+### **IsBufferingChanged**
 
-Fires when the LiveAware Desktop Recorder creates a slice.
-
-```csharp
-public event EventHandler SliceCreated;
-```
-
-### **IsInBackgroundModeChanged**
-
-Fires when the LiveAware Desktop Recorder changes modes. Check the [RecorderPlugin.IsInBackgroundMode](./liveawarelabs.recorderplugin.md#isinbackgroundmode)
- property to determine whether or not the LiveAware Desktop Recorder is in background mode.
+Fires when the LiveAware Desktop Recorder starts or stops buffering. Check the [RecorderPlugin.IsBuffering](./liveawarelabs.recorderplugin.md#isbuffering) property
+ to determine whether or not the LiveAware Desktop Recorder is buffering.
 
 ```csharp
-public event EventHandler IsInBackgroundModeChanged;
+public event EventHandler IsBufferingChanged;
 ```
 
 ### **IsRecordingChanged**
 
 Fires when the LiveAware Desktop Recorder starts or stops recording or streaming. This event also fires if the recorder
- enters background mode or if there is an error attempting to start streaming. Check the [RecorderPlugin.IsRecording](./liveawarelabs.recorderplugin.md#isrecording) property
- to determine whether or not the LiveAware Desktop Recorder is currently recording or streaming.
+ enters background mode. Check the [RecorderPlugin.IsRecording](./liveawarelabs.recorderplugin.md#isrecording) property to determine whether or not the LiveAware Desktop
+ Recorder is currently recording or streaming.
 
 ```csharp
 public event EventHandler IsRecordingChanged;
@@ -215,9 +207,17 @@ public event EventHandler IsRecordingChanged;
 
 ### **IsRunningChanged**
 
-Fires when the LiveAware Desktop Recorder closes. Check the [RecorderPlugin.IsRunning](./liveawarelabs.recorderplugin.md#isrunning)
- property to determine whether or not the LiveAware Desktop Recorder is currently running.
+Fires when the LiveAware Desktop Recorder closes. Check the [RecorderPlugin.IsRunning](./liveawarelabs.recorderplugin.md#isrunning) property to determine whether or not
+ the LiveAware Desktop Recorder is currently running.
 
 ```csharp
 public event EventHandler IsRunningChanged;
+```
+
+### **SliceCreated**
+
+Fires when the LiveAware Desktop Recorder creates a slice.
+
+```csharp
+public event EventHandler SliceCreated;
 ```
