@@ -76,12 +76,12 @@ A new [NamedPipe](./liveawarelabs.namedpipe.md) object.
 [TimeoutException](https://docs.microsoft.com/en-us/dotnet/api/system.timeoutexception)<br>
 Thrown if this plug-in cannot connect with the LiveAware Desktop Recorder within ten seconds.
 
-### **StartStreamingAsync(String, String, Boolean, Boolean, Boolean)**
+### **StartStreamingAsync(String, String, Boolean, Boolean, Boolean, Boolean)**
 
 Send a message to the recorder to start live streaming.
 
 ```csharp
-public Task<bool> StartStreamingAsync(string teamName, string eventName, bool live, bool useMicrophone, bool useCamera)
+public Task<bool> StartStreamingAsync(string teamName, string eventName, bool live, bool useMicrophone, bool useCamera, bool fullScreen)
 ```
 
 #### Parameters
@@ -102,6 +102,9 @@ Whether or not to stream the default system microphone audio.
 
 `useCamera` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 Whether or not to use the available camera.
+
+`fullScreen` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+Whether or not to record the entire screen instead of only the window.
 
 #### Returns
 

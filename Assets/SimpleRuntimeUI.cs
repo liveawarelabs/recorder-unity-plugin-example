@@ -17,6 +17,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
   private Toggle useCameraToggle;
   private Toggle useMicrophoneToggle;
   private Toggle goLiveToggle;
+  private Toggle fullScreenToggle;
   private Button resetButton;
   private RecorderPlugin recorderPlugin;
   private DateTime? streamingStartTime;
@@ -31,7 +32,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
     changeModeButton = (Button)uiDocument.rootVisualElement.Q("changeMode");
     startButton = (Button)uiDocument.rootVisualElement.Q("start");
-    sliceButton = (Button)uiDocument.rootVisualElement.Q("slice");
+    sliceButton = (Button)uiDocument.rootVisualElement.Q("create-slice");
     stopButton = (Button)uiDocument.rootVisualElement.Q("stop");
     changeModeButton.RegisterCallback<ClickEvent>(OnChangeModeClicked);
     startButton.RegisterCallback<ClickEvent>(OnStartClicked);
@@ -42,6 +43,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     useCameraToggle = (Toggle)uiDocument.rootVisualElement.Q("use-camera");
     useMicrophoneToggle = (Toggle)uiDocument.rootVisualElement.Q("use-microphone");
     goLiveToggle = (Toggle)uiDocument.rootVisualElement.Q("go-live");
+    fullScreenToggle = (Toggle)uiDocument.rootVisualElement.Q("full-screen");
     resetButton = (Button)uiDocument.rootVisualElement.Q("reset");
     resetButton.RegisterCallback<ClickEvent>(OnResetClicked);
   }
@@ -123,7 +125,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     if (goLiveToggle.value) {
       streamingStartTime = DateTime.Now;
     }
-    if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, live: goLiveToggle.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value)) {
+    if (await recorderPlugin.StartStreamingAsync(teamName: teamInput.value, eventName: eventInput.value, live: goLiveToggle.value, useCamera: useCameraToggle.value, useMicrophone: useMicrophoneToggle.value, fullScreen: fullScreenToggle.value)) {
       string message = "Requested to start streaming";
       if (string.IsNullOrEmpty(teamInput.text)) {
         message += " default team";

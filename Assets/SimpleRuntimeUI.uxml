@@ -9,13 +9,14 @@
                 <ui:Label name="status" text="Pending" style="align-self: center;" />
                 <ui:Button text="Pending" display-tooltip-when-elided="true" name="changeMode" />
             </ui:VisualElement>
-            <ui:Button text="Create Slice" display-tooltip-when-elided="true" name="slice" />
+            <ui:Button text="Create Slice" display-tooltip-when-elided="true" name="create-slice" />
             <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" class="la-text-entry" />
             <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
             <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
                 <ui:Toggle name="use-camera" text="Camera" />
                 <ui:Toggle name="use-microphone" text="Microphone" />
                 <ui:Toggle name="go-live" text="Go live" />
+                <ui:Toggle text="Full-screen" name="full-screen" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
                 <ui:Button text="GO LIVE" display-tooltip-when-elided="true" name="start" class="big-red-button" />
