@@ -19,7 +19,7 @@ You must invoke the [RecorderPlugin.DisposeAsync()](./liveawarelabs.recorderplug
 
 ### **IsBuffering**
 
-Specifies whether or not the LiveAware Desktop Recorder is buffering. The value of this property is invalid if the
+Specifies whether or not the Live Aware Desktop Recorder is buffering. The value of this property is invalid if the
  recorder is not running.
 
 ```csharp
@@ -32,8 +32,8 @@ public bool IsBuffering { get; private set; }
 
 ### **IsRecording**
 
-Specifies whether or not the LiveAware Desktop Recorder is currently recording or streaming. The value of this property is
- invalid if the recorder is not running.
+Specifies whether or not the Live Aware Desktop Recorder is currently recording or streaming. The value of this
+ property is invalid if the recorder is not running.
 
 ```csharp
 public bool IsRecording { get; private set; }
@@ -45,7 +45,9 @@ public bool IsRecording { get; private set; }
 
 ### **IsRunning**
 
-Specifies whether or not the LiveAware Desktop Recorder is currently running.
+Specifies whether or not the Live Aware Desktop Recorder is currently running. If this property is false, all other
+ property values are invalid and all methods have no effect. You must create a new [RecorderPlugin](./liveawarelabs.recorderplugin.md)
+ instance to restart the recorder.
 
 ```csharp
 public bool IsRunning { get; private set; }
@@ -59,8 +61,8 @@ public bool IsRunning { get; private set; }
 
 ### **CreateAsync()**
 
-Create a new RecorderPlugin. This ensures the LiveAware Desktop Recorder is running. This might take a while if it needs
- to launch the app.
+Create a new [RecorderPlugin](./liveawarelabs.recorderplugin.md). This ensures the Live Aware Desktop Recorder is running. This might take a
+ while if it needs to launch the app.
 
 ```csharp
 public static Task<RecorderPlugin> CreateAsync()
@@ -74,11 +76,11 @@ A new [NamedPipe](./liveawarelabs.namedpipe.md) object.
 #### Exceptions
 
 [TimeoutException](https://docs.microsoft.com/en-us/dotnet/api/system.timeoutexception)<br>
-Thrown if this plug-in cannot connect with the LiveAware Desktop Recorder within ten seconds.
+Thrown if the recorder does not accept a connection within ten seconds.
 
 ### **StartStreamingAsync(String, String, Boolean, Boolean, Boolean, Boolean)**
 
-Send a message to the recorder to start live streaming.
+Send a message to the Live Aware Desktop Recorder to start live streaming.
 
 ```csharp
 public Task<bool> StartStreamingAsync(string teamName, string eventName, bool live, bool useMicrophone, bool useCamera, bool fullScreen)
@@ -87,12 +89,12 @@ public Task<bool> StartStreamingAsync(string teamName, string eventName, bool li
 #### Parameters
 
 `teamName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The name of the team the LiveAware Desktop Recorder will use if not empty, otherwise it will use the
- currently selected team. However, you must specify a team name if you want to create a new event.
+The name of the team the recorder will use if not empty, otherwise it will use the currently
+ selected team. You must specify a team name if you want to create a new event.
 
 `eventName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-The name of the event the LiveAware Desktop Recorder will use if not empty, otherwise it will use
- the currently selected event.
+The name of the event the recorder will use if not empty, otherwise it will use the currently
+ selected event.
 
 `live` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 Whether or not to stream live versus record.
@@ -116,13 +118,22 @@ True if request sent successfully, false otherwise.
 [IOException](https://docs.microsoft.com/en-us/dotnet/api/system.io.ioexception)<br>
 Thrown if communication with the recorder is interrupted.
 
-### **StopStreamingAsync()**
+### **StopStreamingAsync(Boolean, String)**
 
-Send a message to the recorder to stop live streaming.
+Send a message to the Live Aware Desktop Recorder to stop live streaming.
 
 ```csharp
-public Task<bool> StopStreamingAsync()
+public Task<bool> StopStreamingAsync(bool upload, string recordingName)
 ```
+
+#### Parameters
+
+`upload` [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
+Whether or not to upload the recording. This parameter is ignored if live.
+
+`recordingName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+The name to assign to the recording. The recorder will generate and assign a name if this
+ parameter is absent or empty.
 
 #### Returns
 
@@ -136,7 +147,7 @@ Thrown if communication with the recorder is interrupted.
 
 ### **ChangeBufferingAsync(Boolean)**
 
-Send a message to the recorder to change buffering.
+Send a message to the Live Aware Desktop Recorder to change buffering.
 
 ```csharp
 public Task ChangeBufferingAsync(bool wantsBuffering)
@@ -150,6 +161,7 @@ Whether or not to enable buffering.
 #### Returns
 
 [Task](https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task)<br>
+True if request sent successfully, false otherwise.
 
 #### Exceptions
 
@@ -158,7 +170,7 @@ Thrown if communication with the recorder is interrupted.
 
 ### **CreateSliceAsync()**
 
-Send a message to the recorder to create a slice.
+Send a message to the Live Aware Desktop Recorder to create a slice.
 
 ```csharp
 public Task<bool> CreateSliceAsync()
@@ -191,8 +203,8 @@ A task that represents the asynchronous dispose operation.
 
 ### **IsBufferingChanged**
 
-Fires when the LiveAware Desktop Recorder starts or stops buffering. Check the [RecorderPlugin.IsBuffering](./liveawarelabs.recorderplugin.md#isbuffering) property
- to determine whether or not the LiveAware Desktop Recorder is buffering.
+Fires when the Live Aware Desktop Recorder starts or stops buffering. Check the [RecorderPlugin.IsBuffering](./liveawarelabs.recorderplugin.md#isbuffering) property to
+ determine whether or not the recorder is buffering. This event handler will run on a background thread.
 
 ```csharp
 public event EventHandler IsBufferingChanged;
@@ -200,9 +212,9 @@ public event EventHandler IsBufferingChanged;
 
 ### **IsRecordingChanged**
 
-Fires when the LiveAware Desktop Recorder starts or stops recording or streaming. This event also fires if the recorder
- enters background mode. Check the [RecorderPlugin.IsRecording](./liveawarelabs.recorderplugin.md#isrecording) property to determine whether or not the LiveAware Desktop
- Recorder is currently recording or streaming.
+Fires when the Live Aware Desktop Recorder starts or stops recording or streaming. This event also fires if the
+ recorder enters or exits background mode. Check the [RecorderPlugin.IsRecording](./liveawarelabs.recorderplugin.md#isrecording) property to determine whether or not the
+ recorder is currently recording or streaming. This event handler will run on a background thread.
 
 ```csharp
 public event EventHandler IsRecordingChanged;
@@ -210,8 +222,8 @@ public event EventHandler IsRecordingChanged;
 
 ### **IsRunningChanged**
 
-Fires when the LiveAware Desktop Recorder closes. Check the [RecorderPlugin.IsRunning](./liveawarelabs.recorderplugin.md#isrunning) property to determine whether or not
- the LiveAware Desktop Recorder is currently running.
+Fires when the Live Aware Desktop Recorder closes. Check the [RecorderPlugin.IsRunning](./liveawarelabs.recorderplugin.md#isrunning) property to determine whether or
+ not the recorder is currently running. This event handler will run on a background thread.
 
 ```csharp
 public event EventHandler IsRunningChanged;
@@ -219,7 +231,7 @@ public event EventHandler IsRunningChanged;
 
 ### **SliceCreated**
 
-Fires when the LiveAware Desktop Recorder creates a slice.
+Fires when the Live Aware Desktop Recorder creates a slice. This event handler will run on a background thread.
 
 ```csharp
 public event EventHandler SliceCreated;
