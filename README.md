@@ -10,6 +10,12 @@ This Unity project makes use of the Live Aware Labs Recorder Unity Plugin.
 1. Open the `SampleScene` scene in the `Assets/Scenes` folder.
 1. Exercise the project in play mode.
 
+## Installation
+
+Follow the instructions given in the [Unity documentation](https://docs.unity3d.com/Manual/upm-ui-tarball.html) to install the
+plug-in in your own application.  The note about the Package Manager recognizing only files with the `.tgz` extension is incorrect.
+The dialog also recognizes files with the `.tar.gz` extension.
+
 ## API
 
 See the [API documentation](docs/liveawarelabs.recorderplugin.md)
