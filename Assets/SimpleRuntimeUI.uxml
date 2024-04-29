@@ -20,6 +20,8 @@
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
                 <ui:Button text="GO LIVE" display-tooltip-when-elided="true" name="start" class="big-red-button" />
+                <ui:Toggle text="Upload name:" name="upload" />
+                <ui:TextField picking-mode="Ignore" name="upload-name" style="flex-shrink: initial;" />
                 <ui:Button text="End Stream" display-tooltip-when-elided="true" name="stop" class="big-red-button" />
             </ui:VisualElement>
             <ui:Button text="Disconnect from Live Aware" display-tooltip-when-elided="true" name="reset" class="secondary-button" />

@@ -14,6 +14,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
 	private Button stopButton;
 	private TextField teamNameInput;
 	private TextField eventNameInput;
+	private Toggle uploadToggle;
+	private TextField uploadNameInput;
 	private Toggle useCameraToggle;
 	private Toggle useMicrophoneToggle;
 	private Toggle goLiveToggle;
@@ -40,6 +42,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		stopButton.RegisterCallback<ClickEvent>(OnStopClicked);
 		teamNameInput = (TextField)uiDocument.rootVisualElement.Q("team-name");
 		eventNameInput = (TextField)uiDocument.rootVisualElement.Q("event-name");
+		uploadToggle = (Toggle)uiDocument.rootVisualElement.Q("upload");
+		uploadNameInput = (TextField)uiDocument.rootVisualElement.Q("upload-name");
 		useCameraToggle = (Toggle)uiDocument.rootVisualElement.Q("use-camera");
 		useMicrophoneToggle = (Toggle)uiDocument.rootVisualElement.Q("use-microphone");
 		goLiveToggle = (Toggle)uiDocument.rootVisualElement.Q("go-live");
@@ -163,7 +167,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
 			return;
 		}
 		streamingStartTime = null;
-		if (await recorderPlugin.StopStreamingAsync()) {
+		if (await recorderPlugin.StopStreamingAsync(uploadToggle.value, uploadToggle.value ? uploadNameInput.text : null)) {
 			string message = "Requested to stop streaming ";
 			if (string.IsNullOrEmpty(eventNameInput.text)) {
 				message += "default event";
