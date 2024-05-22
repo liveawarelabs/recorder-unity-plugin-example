@@ -6,8 +6,10 @@ using UnityEngine.UIElements;
 public class SimpleRuntimeUI : MonoBehaviour {
 	private VisualElement before;
 	private VisualElement after;
-	private Button initializeButton;
-	private Label statusLabel;
+    private VisualElement always;
+    private Button initializeButton;
+    private Button exitButton;
+    private Label statusLabel;
 	private Button changeModeButton;
 	private Button startButton;
 	private Button sliceButton;
@@ -28,10 +30,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		var uiDocument = GetComponent<UIDocument>();
 		before = uiDocument.rootVisualElement.Q("before");
 		after = uiDocument.rootVisualElement.Q("after");
-		after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+        always = uiDocument.rootVisualElement.Q("always");
+        after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
 		initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
 		initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
-		statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
+        exitButton = (Button)uiDocument.rootVisualElement.Q("exit");
+        exitButton.RegisterCallback<ClickEvent>(OnExitClicked);
+        statusLabel = (Label)uiDocument.rootVisualElement.Q("status");
 		changeModeButton = (Button)uiDocument.rootVisualElement.Q("changeMode");
 		startButton = (Button)uiDocument.rootVisualElement.Q("start");
 		sliceButton = (Button)uiDocument.rootVisualElement.Q("create-slice");
@@ -102,7 +107,18 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		}
 	}
 
-	private void RecorderPlugin_IsBufferingChanged(object sender, EventArgs e) {
+    private void OnExitClicked(ClickEvent clickEvent)
+    {
+        Debug.Log("Quit application");
+#if UNITY_STANDALONE
+        Application.Quit();
+#endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+    private void RecorderPlugin_IsBufferingChanged(object sender, EventArgs e) {
 		string mode = recorderPlugin.IsBuffering ? "en" : "dis";
 		Debug.Log($"Buffering {mode}abled");
 	}

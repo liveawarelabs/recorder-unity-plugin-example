@@ -4,6 +4,9 @@
         <ui:VisualElement name="before" class="sdk-window" style="flex-grow: 1;">
             <ui:Button text="Initialize Live Aware" display-tooltip-when-elided="true" name="initialize" class="secondary-button" />
         </ui:VisualElement>
+        <ui:VisualElement name="always" class="sdk-window" style="flex-grow: 1;">
+            <ui:Button text="Exit" display-tooltip-when-elided="true" name="exit" class="secondary-button" />
+        </ui:VisualElement>
         <ui:VisualElement name="after" class="sdk-window" style="flex-grow: 1; display: flex;">
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
                 <ui:Label name="status" text="Pending" style="align-self: center;" />
