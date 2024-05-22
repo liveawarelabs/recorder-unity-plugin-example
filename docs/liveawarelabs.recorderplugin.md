@@ -236,3 +236,19 @@ Fires when the Live Aware Desktop Recorder creates a slice. This event handler w
 ```csharp
 public event EventHandler SliceCreated;
 ```
+
+### **TeamSelected**
+
+Fires when the Live Aware Desktop Recorder selects a team. This event handler will run on a background thread.
+
+```csharp
+public event StringFieldChanged TeamSelected;
+```
+
+### **EventSelected**
+
+Fires when the Live Aware Desktop Recorder selects an event. This event handler will run on a background thread.
+
+```csharp
+public event StringFieldChanged EventSelected;
+```

@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 public class SimpleRuntimeUI : MonoBehaviour {
 	private VisualElement before;
 	private VisualElement after;
-    private VisualElement always;
     private Button initializeButton;
     private Button exitButton;
     private Label statusLabel;
@@ -25,12 +24,14 @@ public class SimpleRuntimeUI : MonoBehaviour {
 	private Button resetButton;
 	private RecorderPlugin recorderPlugin;
 	private DateTime? streamingStartTime;
+	private string new_team_name = null;
+    private string new_event_name = null;
+	private bool want_exit = false;
 
-	private void OnEnable() {
+    private void OnEnable() {
 		var uiDocument = GetComponent<UIDocument>();
 		before = uiDocument.rootVisualElement.Q("before");
 		after = uiDocument.rootVisualElement.Q("after");
-        always = uiDocument.rootVisualElement.Q("always");
         after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
 		initializeButton = (Button)uiDocument.rootVisualElement.Q("initialize");
 		initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
@@ -66,7 +67,17 @@ public class SimpleRuntimeUI : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		string state = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
+		if (want_exit)
+		{
+#if UNITY_STANDALONE
+
+            Application.Quit(0);
+#endif
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
+        string state = recorderPlugin == null ? "Idle" : recorderPlugin.IsRunning ?
 		  recorderPlugin.IsRecording ? "Recording" : "Connected" : "Disconnected";
 		string mode = recorderPlugin != null && recorderPlugin.IsBuffering ? ", buffering" : "";
 		statusLabel.text = $"{state}{mode}";
@@ -85,21 +96,34 @@ public class SimpleRuntimeUI : MonoBehaviour {
 				changeModeButton.text = "Start buffering";
 			}
 		}
-	}
+		if (new_team_name != null)
+		{
+			teamNameInput.value = new_team_name;
+			new_team_name = null;
+        }
+        if (new_event_name != null)
+        {
+            eventNameInput.value = new_event_name;
+            new_event_name = null;
+        }
+    }
 
 	private void OnApplicationQuit() {
-		Debug.Log("quitting");
-		_ = recorderPlugin?.DisposeAsync();
-	}
+        Debug.Log("quitting");
+        _ = recorderPlugin?.DisposeAsync();
+    }
 
 	private async void OnInitializeClicked(ClickEvent clickEvent) {
 		try {
 			recorderPlugin = await RecorderPlugin.CreateAsync();
-			recorderPlugin.SliceCreated += RecorderPlugin_SliceCreated;
+            recorderPlugin.EventSelected += RecorderPlugin_EventChanged;
+            recorderPlugin.TeamSelected += RecorderPlugin_TeamChanged;
+            recorderPlugin.SliceCreated += RecorderPlugin_SliceCreated;
 			recorderPlugin.IsBufferingChanged += RecorderPlugin_IsBufferingChanged;
 			recorderPlugin.IsRecordingChanged += RecorderPlugin_IsRecordingChanged;
 			recorderPlugin.IsRunningChanged += RecorderPlugin_IsRunningChanged;
-			before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+			
+            before.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
 			after.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
 			Debug.Log("Initialized");
 		} catch (TimeoutException) {
@@ -107,15 +131,15 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		}
 	}
 
-    private void OnExitClicked(ClickEvent clickEvent)
+    private async void OnExitClicked(ClickEvent clickEvent)
     {
         Debug.Log("Quit application");
-#if UNITY_STANDALONE
-        Application.Quit();
-#endif
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
+		if (recorderPlugin != null)
+		{
+			await recorderPlugin.DisposeAsync();
+			recorderPlugin = null;
+		}
+		want_exit = true;
     }
 
     private void RecorderPlugin_IsBufferingChanged(object sender, EventArgs e) {
@@ -123,7 +147,19 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		Debug.Log($"Buffering {mode}abled");
 	}
 
-	private void RecorderPlugin_SliceCreated(object sender, EventArgs e) {
+    private void RecorderPlugin_TeamChanged(object sender, string team_name)
+    {
+        Debug.Log($"Recorder set team to '{team_name}'");
+        new_team_name = team_name;
+    }
+
+    private void RecorderPlugin_EventChanged(object sender, string event_name)
+    {
+        Debug.Log($"Recorder set event to '{event_name}'");
+        new_event_name = event_name;
+    }
+
+    private void RecorderPlugin_SliceCreated(object sender, EventArgs e) {
 		Debug.Log("Slice created");
 	}
 
