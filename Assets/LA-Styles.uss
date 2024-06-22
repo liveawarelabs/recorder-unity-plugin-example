@@ -7,7 +7,12 @@
     border-radius: 5px;
     border-color: #38BDF8;
     background-color: rgba(48, 48, 55, 0.7);
-    color: rgba(56, 189, 248, 1);
+}
+
+.int-input {
+    border-radius: 5px;
+    background-color: rgba(48, 48, 55, 0.7);
+    color: rgba(0, 0, 0, 0.8);
 }
 
 TextField > TextInput {
