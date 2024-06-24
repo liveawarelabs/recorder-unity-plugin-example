@@ -10,3 +10,5 @@ obj/
 *.sln
 *.sw[op]
 .vsconfig
+Assets/Plugins/
+Assets/Plugins.meta

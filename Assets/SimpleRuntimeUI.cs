@@ -9,7 +9,8 @@ using System.Collections;
 using UnityEngine.Diagnostics;
 
 public class SimpleRuntimeUI : MonoBehaviour {
-	private VisualElement before_visual, after_visual, checkboxes_visual, properties_visual;
+    private AudioSource audioSource;
+    private VisualElement before_visual, after_visual, checkboxes_visual, properties_visual;
     private Button initializeButton;
     private Button exitButton, mainExitButton, resetButton, crashButton;
 	private Label statusLabel, userLabel, loggerLabel;
@@ -30,6 +31,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
     private void OnEnable() 
 	{
+        audioSource = GetComponent<AudioSource>();
         var uiDocument = GetComponent<UIDocument>();
 		before_visual = uiDocument.rootVisualElement.Q("before");
 		after_visual = uiDocument.rootVisualElement.Q("after");
@@ -328,11 +330,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
     {
         if (evt.newValue)
         {
-
+            audioSource.Play();
         }
         else
         {
-
+            audioSource.Stop();
         }
     }
 }
