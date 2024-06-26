@@ -1,4 +1,4 @@
-# Live Aware Labs Recorder Unity Plugin Example Project
+# Unity Example Project for Live Aware Labs Recorder Plugin
 
 This is the sample Unity project to verify and demonstrate usage of LiveAwareRecorder plugin.
 
@@ -8,5 +8,5 @@ This is the sample Unity project to verify and demonstrate usage of LiveAwareRec
 - Microsoft Visual Studio 2022
   
 ## Quick Start
-1. Download and install [latest plugin release](add link)
+1. Download and install [latest plugin release](add link). Igonre errors on first project opening in Unity Editor
 2. Open "Assets/Scenes/SampleScene" in Unity editor
