@@ -8,5 +8,5 @@ This is the sample Unity project to verify and demonstrate usage of LiveAwareRec
 - Microsoft Visual Studio 2022
   
 ## Quick Start
-1. Download and install [latest plugin release](https://liveawarenexus.sfo3.cdn.digitaloceanspaces.com/LiveAwareSDK_2.0/Unity/LiveAwareUnityPlugin.zip). Ignore errors on first project opening in Unity Editor
+1. Download and install [latest plugin release](https://liveawarenexus.sfo3.cdn.digitaloceanspaces.com/LiveAwareSDK/Unity/LiveAwareUnityPlugin.zip). Ignore errors on first project opening in Unity Editor
 2. Open "Assets/Scenes/SampleScene" in Unity editor
