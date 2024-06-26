@@ -1,31 +1,56 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/LA-Styles.uss?fileID=7433441132597879392&amp;guid=f4e0e7f44f79bb342a0638e7d5985e5c&amp;type=3#LA-Styles" />
-    <ui:VisualElement style="flex-grow: 1; bottom: 0; justify-content: flex-end; max-width: 70%; align-self: center; align-items: stretch; min-width: 70%; height: auto; position: absolute; background-color: rgba(39, 39, 42, 0.89); color: rgb(255, 255, 255); border-radius: 8px 8px 0 0;">
-        <ui:VisualElement name="before" class="sdk-window" style="flex-grow: 1;">
-            <ui:Button text="Initialize Live Aware" display-tooltip-when-elided="true" name="initialize" class="secondary-button" />
+    <ui:VisualElement style="flex-grow: 1; justify-content: flex-end; max-width: 90%; align-self: center; align-items: stretch; min-width: 70%; height: auto; position: absolute; background-color: rgba(39, 39, 42, 0.89); color: rgb(255, 255, 255); border-radius: 0 0 8px 8px;">
+    
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;"> 
+            <ui:Label text="Status: " style="align-self: center;" />
+            <ui:Label name="status" style="align-self: center;" />
+            <ui:Label text="      User: " style="align-self: center;" />
+            <ui:Label name="user" style="align-self: center;" />
         </ui:VisualElement>
-        <ui:Button text="Exit" display-tooltip-when-elided="true" name="exit" class="secondary-button" />
+
+        <ui:VisualElement name="before" class="sdk-window" style="flex-grow: 1;">
+            <ui:Button text="Start" display-tooltip-when-elided="true" name="initialize" class="secondary-button" />
+            <ui:Button text="Exit" display-tooltip-when-elided="true" name="exit" class="secondary-button" />            
+        </ui:VisualElement>
+
         <ui:VisualElement name="after" class="sdk-window" style="flex-grow: 1; display: flex;">
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
-                <ui:Label name="status" text="Pending" style="align-self: center;" />
-                <ui:Button text="Pending" display-tooltip-when-elided="true" name="changeMode" />
-            </ui:VisualElement>
-            <ui:Button text="Create Slice" display-tooltip-when-elided="true" name="create-slice" />
-            <ui:TextField picking-mode="Ignore" label="Team name:" name="team-name" class="la-text-entry" />
-            <ui:TextField picking-mode="Ignore" label="Event name:" name="event-name" />
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
-                <ui:Toggle name="use-camera" text="Camera" />
-                <ui:Toggle name="use-microphone" text="Microphone" />
-                <ui:Toggle name="go-live" text="Go live" />
-                <ui:Toggle text="Full-screen" name="full-screen" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+                <ui:TextField picking-mode="Ignore" label="Slice name:" name="slice-name" style="flex-shrink: initial;" />
+                <ui:IntegerField picking-mode="Ignore" label="Slice duration (sec):" name="slice-len" style="flex-shrink: initial;" class="int-input" />
+                <ui:Button text="Create Slice" display-tooltip-when-elided="true" name="create-slice" class="big-red-button" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
-                <ui:Button text="GO LIVE" display-tooltip-when-elided="true" name="start" class="big-red-button" />
-                <ui:Toggle text="Upload name:" name="upload" />
-                <ui:TextField picking-mode="Ignore" name="upload-name" style="flex-shrink: initial;" />
-                <ui:Button text="End Stream" display-tooltip-when-elided="true" name="stop" class="big-red-button" />
+                <ui:TextField picking-mode="Ignore" label="New Event name:" name="event-name" style="flex-shrink: initial;" />
+                <ui:Button text="Create New Event" display-tooltip-when-elided="true" name="create-event" />
             </ui:VisualElement>
-            <ui:Button text="Disconnect from Live Aware" display-tooltip-when-elided="true" name="reset" class="secondary-button" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+                <ui:VisualElement name="checkboxes" style="flex-grow: 1">
+                </ui:VisualElement>
+                <ui:VisualElement name="properties" style="flex-grow: 1">
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+                <ui:TextField picking-mode="Ignore" label="Stream/Record name:" name="record-name" style="flex-shrink: initial;" />
+                <ui:TextField picking-mode="Ignore" label="Records output location:" name="records-location" style="flex-shrink: initial;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
+                <ui:Button text="Start Streaming" display-tooltip-when-elided="true" name="start-streaming" class="big-red-button" />
+                <ui:Button text="Stop Streaming" display-tooltip-when-elided="true" name="stop-streaming" class="secondary-button" />
+                <ui:Button text="Start Recording" display-tooltip-when-elided="true" name="start-recording" class="big-red-button" />
+                <ui:Button text="Stop Recording" display-tooltip-when-elided="true" name="stop-recording" class="secondary-button" />
+            </ui:VisualElement>
+            <ui:Toggle label="Upload record on Stop" name="upload-record" style="flex-shrink: initial;" />
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
+                <ui:TextField picking-mode="Ignore" label="Upload video name:" name="upload-name" style="flex-shrink: initial;" />
+                <ui:TextField picking-mode="Ignore" label="Upload event name:" name="upload-event" style="flex-shrink: initial;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
+                <ui:Button text="Reset" display-tooltip-when-elided="true" name="reset" class="secondary-button" />
+                <ui:Button text="Exit" display-tooltip-when-elided="true" name="exit_main" class="secondary-button" />
+                <ui:Button text="Crash" display-tooltip-when-elided="true" name="crash" class="secondary-button" />
+            </ui:VisualElement>
         </ui:VisualElement>
+        <ui:Label name="logger" style="align-self: center;" />
     </ui:VisualElement>
 </ui:UXML>

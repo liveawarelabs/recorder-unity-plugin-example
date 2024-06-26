@@ -1,22 +1,12 @@
-# Live Aware Labs Recorder Unity Plugin Example Project
+# Unity Example Project for Live Aware Labs Recorder Plugin
 
+This is the sample Unity project to verify and demonstrate usage of LiveAwareRecorder plugin.
+
+## Prerequisites
+- Windows 10+
+- Unity 2022.3+
+- Microsoft Visual Studio 2022
+  
 ## Quick Start
-
-This Unity project makes use of the Live Aware Labs Recorder Unity Plugin.
-
-1. Create a `bin` directory in this repository's directory.
-1. Copy the `com.liveawarelabs.recorder-plugin.tar.gz` into that directory.
-1. Open the project in Unity.
-1. Open the `SampleScene` scene in the `Assets/Scenes` folder.
-1. Exercise the project in play mode.
-
-## Installation
-
-Follow the instructions given in the [Unity documentation](https://docs.unity3d.com/Manual/upm-ui-tarball.html) to install the
-plug-in in your own application.  The note about the Package Manager recognizing only files with the `.tgz` extension is incorrect.
-The dialog also recognizes files with the `.tar.gz` extension.
-
-## API
-
-See the [API documentation](docs/liveawarelabs.recorderplugin.md)
-for all classes, methods, and properties after installing the plug-in.
+1. Download and install [latest plugin release](https://liveawarenexus.sfo3.cdn.digitaloceanspaces.com/LiveAwareSDK/Unity/LiveAwareUnityPlugin.zip). Ignore errors on first project opening in Unity Editor
+2. Open "Assets/Scenes/SampleScene" in Unity editor
