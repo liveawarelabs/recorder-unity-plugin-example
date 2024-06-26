@@ -338,13 +338,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
 
     private void OnAudioChanged(ChangeEvent<bool> evt)
     {
-        if (evt.newValue)
+        /*if (evt.newValue)
         {
             audioSource.Play();
         }
         else
         {
             audioSource.Stop();
-        }
+        }*/
     }
 }
