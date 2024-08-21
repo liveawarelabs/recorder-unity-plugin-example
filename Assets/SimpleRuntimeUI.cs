@@ -20,6 +20,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
     private IntegerField sliceLenField;
     private Toggle uploadToggle;
 
+    // Telemetry
+    private Button telemetryButton;
+    private TextField telemetryCategoryText, telemetryTagText;
+
     private bool want_exit, main_menu, menu_changed = true, buffering;
 	private string status = "none", user = "none";
     uint qsize = 5;  // number of messages to keep
@@ -60,6 +64,11 @@ public class SimpleRuntimeUI : MonoBehaviour {
         crashButton = uiDocument.rootVisualElement.Q<Button>("crash");
         resetButton = uiDocument.rootVisualElement.Q<Button>("reset");
         uploadToggle = uiDocument.rootVisualElement.Q<Toggle>("upload-record");
+
+        // Telemetry
+        telemetryButton = uiDocument.rootVisualElement.Q<Button>("telemetry-button");
+        telemetryCategoryText = uiDocument.rootVisualElement.Q<TextField>("telemetry-category-text");
+        telemetryTagText = uiDocument.rootVisualElement.Q<TextField>("telemetry-tag-text");
 
         string[] checkboxes_list = new string[] {"Buffering", "Full Screen", "Camera", "Microphone", "Audio", "Cursor", "Ultra Low Latency" };
         foreach (string checkbox_name in checkboxes_list)
@@ -104,6 +113,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         stopStreamingButton.RegisterCallback<ClickEvent>(OnStopStreamingClicked);
         startRecordingButton.RegisterCallback<ClickEvent>(OnStartRecordingClicked);
         stopRecordingButton.RegisterCallback<ClickEvent>(OnStopRecordingClicked);
+        telemetryButton.RegisterCallback<ClickEvent>(OnTelemetryButtonClicked);
 
         Debug.Log(LiveAwareSDK.get_sdk_version_string());
         LiveAwareSDK.refresh_state();       
@@ -127,6 +137,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         stopStreamingButton.UnregisterCallback<ClickEvent>(OnStopStreamingClicked);
         startRecordingButton.UnregisterCallback<ClickEvent>(OnStartRecordingClicked);
         stopRecordingButton.UnregisterCallback<ClickEvent>(OnStopRecordingClicked);
+        telemetryButton.UnregisterCallback<ClickEvent>(OnTelemetryButtonClicked);
     }
 
 	void OnGUI() {
@@ -346,5 +357,15 @@ public class SimpleRuntimeUI : MonoBehaviour {
         {
             audioSource.Stop();
         }*/
+    }
+
+    private async void OnTelemetryButtonClicked(ClickEvent clickEvent)
+    {
+        string category = telemetryCategoryText.value;
+        string data_template = "Telemetry: { param}";
+        string data_params_json = "{\"param\": 1 }";
+        string[] tags = { "test_tag", telemetryTagText.value };
+
+        await Task.Factory.StartNew(() => LiveAwareLabs.LiveAwareSDK.telemetry(category, data_template, data_params_json, tags));
     }
 }

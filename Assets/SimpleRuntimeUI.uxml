@@ -45,6 +45,11 @@
                 <ui:TextField picking-mode="Ignore" label="Upload video name:" name="upload-name" style="flex-shrink: initial;" />
                 <ui:TextField picking-mode="Ignore" label="Upload event name:" name="upload-event" style="flex-shrink: initial;" />
             </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center; ">
+                <ui:TextField picking-mode="Ignore" label="Telemetry category:" name="telemetry-category-text" style="flex-shrink: initial;" />
+                <ui:TextField picking-mode="Ignore" label="Telemetry tag:" name="telemetry-tag-text" style="flex-shrink: initial;" />
+                <ui:Button text="Send telemetry event" display-tooltip-when-elided="true" name="telemetry-button" class="secondary-button" />
+            </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around;">
                 <ui:Button text="Reset" display-tooltip-when-elided="true" name="reset" class="secondary-button" />
                 <ui:Button text="Exit" display-tooltip-when-elided="true" name="exit_main" class="secondary-button" />
