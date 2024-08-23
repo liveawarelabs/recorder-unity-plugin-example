@@ -7,6 +7,8 @@
             <ui:Label name="status" style="align-self: center;" />
             <ui:Label text="      User: " style="align-self: center;" />
             <ui:Label name="user" style="align-self: center;" />
+            <ui:Label text="      Role: " style="align-self: center;" />
+            <ui:Label name="role" style="align-self: center;" />
         </ui:VisualElement>
 
         <ui:VisualElement name="before" class="sdk-window" style="flex-grow: 1;">

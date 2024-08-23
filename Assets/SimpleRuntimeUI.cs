@@ -13,7 +13,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     private VisualElement before_visual, after_visual, checkboxes_visual, properties_visual;
     private Button initializeButton;
     private Button exitButton, mainExitButton, resetButton, crashButton;
-	private Label statusLabel, userLabel, loggerLabel;
+	private Label statusLabel, userLabel, roleLabel, loggerLabel;
 	private Button startStreamingButton, stopStreamingButton, startRecordingButton, stopRecordingButton;
 	private Button sliceButton, eventButton;
     private TextField sliceText, eventText, uploadNameText, uploadEventText, recordNameText, recordsLocationText;
@@ -25,7 +25,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
     private TextField telemetryCategoryText, telemetryTagText;
 
     private bool want_exit, main_menu, menu_changed = true, buffering;
-	private string status = "none", user = "none";
+	private string status = "none", user = "none", role = "none";
     uint qsize = 5;  // number of messages to keep
     Queue myLogQueue = new Queue();
     Dictionary<string, Toggle> checkboxes_ui = new Dictionary<string, Toggle>();
@@ -46,6 +46,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         exitButton = uiDocument.rootVisualElement.Q<Button>("exit");
         statusLabel = uiDocument.rootVisualElement.Q<Label>("status");
         userLabel = uiDocument.rootVisualElement.Q<Label>("user");
+        roleLabel = uiDocument.rootVisualElement.Q<Label>("role");
         loggerLabel = uiDocument.rootVisualElement.Q<Label>("logger");
 		sliceButton = uiDocument.rootVisualElement.Q<Button>("create-slice");
         startStreamingButton = uiDocument.rootVisualElement.Q<Button>("start-streaming");
@@ -153,7 +154,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
         }
 		statusLabel.text = status;
 		userLabel.text = user;
-		loggerLabel.text = string.Join("\n", myLogQueue.ToArray());
+        roleLabel.text = role;
+        loggerLabel.text = string.Join("\n", myLogQueue.ToArray());
 
         string[] properties_list = LiveAwareSDK.get_available_selection_properties();
         if (menu_changed)
@@ -246,7 +248,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
 			case "user":
 				user = new_state;
 				break;
-		}
+            case "role":
+                role = new_state;
+                break;
+        }
     }
 
 	private void OnPropertyChanged(string property_type, string[] available_Values, string active_value)
