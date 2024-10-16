@@ -367,10 +367,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
     private async void OnTelemetryButtonClicked(ClickEvent clickEvent)
     {
         string category = telemetryCategoryText.value;
-        string data_template = "Telemetry: { param}";
-        string data_params_json = "{\"param\": 1 }";
+        string body = "Hello, {name}. It is telemetry 'body'.";
+        string data = "{\"name\": \"Tester\" }";
         string[] tags = { "test_tag", telemetryTagText.value };
 
-        await Task.Factory.StartNew(() => LiveAwareLabs.LiveAwareSDK.telemetry(category, data_template, data_params_json, tags));
+        await Task.Factory.StartNew(() => LiveAwareLabs.LiveAwareSDK.telemetry(category, body, data, tags));
     }
 }
