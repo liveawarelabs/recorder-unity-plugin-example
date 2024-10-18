@@ -29,7 +29,7 @@
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
                 <ui:VisualElement name="checkboxes" style="flex-grow: 1">
                 </ui:VisualElement>
-                <ui:VisualElement name="properties" style="flex-grow: 1">
+                <ui:VisualElement name="properties" style="flex-grow: 1; width: 85%;">
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
