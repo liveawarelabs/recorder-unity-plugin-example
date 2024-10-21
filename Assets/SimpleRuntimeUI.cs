@@ -100,7 +100,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         LiveAwareSDK.OnLogMessage += OnLogReceived;
         LiveAwareSDK.OnStateChanged += OnStateChanged;
         LiveAwareSDK.OnSelectionPropertyReady += OnPropertyChanged;
-        LiveAwareSDK.OnVideoUploadReady += OnVideoUploadReady;
+        LiveAwareSDK.OnVideoDetailsReady += OnVideoDetailsReady;
         Application.logMessageReceived += HandleLog;
 
         initializeButton.RegisterCallback<ClickEvent>(OnInitializeClicked);
@@ -124,7 +124,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         LiveAwareSDK.OnLogMessage -= OnLogReceived;
         LiveAwareSDK.OnStateChanged -= OnStateChanged;
         LiveAwareSDK.OnSelectionPropertyReady -= OnPropertyChanged;
-        LiveAwareSDK.OnVideoUploadReady -= OnVideoUploadReady;
+        LiveAwareSDK.OnVideoDetailsReady -= OnVideoDetailsReady;
         Application.logMessageReceived -= HandleLog;
 
         initializeButton.UnregisterCallback<ClickEvent>(OnInitializeClicked);
@@ -260,9 +260,9 @@ public class SimpleRuntimeUI : MonoBehaviour {
 		properties_active[property_type] = active_value;
 	}
 
-    private void OnVideoUploadReady(string video_type, string project_id, string event_id, string video_id, string video_name, string video_url)
+    private void OnVideoDetailsReady(string video_type, string video_state, string project_id, string event_id, string video_id, string video_name, string video_url)
     {
-        string msg = $"{video_type}:{video_name} upload completed:\nproject - {project_id}; event - {event_id}; video - {video_id};\nurl - {video_url}";
+        string msg = $"{video_type} {video_state}:{video_name} upload completed:\nproject - {project_id}; event - {event_id}; video - {video_id};\nurl - {video_url}";
         Debug.Log(msg);
         HandleLog(msg, "", LogType.Log);
     }
