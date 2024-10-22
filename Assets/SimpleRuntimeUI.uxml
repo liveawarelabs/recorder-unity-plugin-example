@@ -27,7 +27,9 @@
                 <ui:Button text="Create New Event" display-tooltip-when-elided="true" name="create-event" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center;">
-                <ui:VisualElement name="checkboxes" style="flex-grow: 1">
+                <ui:VisualElement style="flex-grow: 1; flex-direction: col;">
+                    <ui:Button text="Set Current Window" display-tooltip-when-elided="true" name="set-current-app-window" style="flex-grow: 1" class="secondary-button"></ui:Button>
+                    <ui:VisualElement name="checkboxes" style="flex-grow: 1"></ui:VisualElement>
                 </ui:VisualElement>
                 <ui:VisualElement name="properties" style="flex-grow: 1; width: 85%;">
                 </ui:VisualElement>

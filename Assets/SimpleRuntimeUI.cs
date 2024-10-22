@@ -8,24 +8,26 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Diagnostics;
 
-public class SimpleRuntimeUI : MonoBehaviour {
+public class SimpleRuntimeUI : MonoBehaviour
+{
     private AudioSource audioSource;
     private VisualElement before_visual, after_visual, checkboxes_visual, properties_visual;
     private Button initializeButton;
     private Button exitButton, mainExitButton, resetButton, crashButton;
-	private Label statusLabel, userLabel, roleLabel, loggerLabel;
-	private Button startStreamingButton, stopStreamingButton, startRecordingButton, stopRecordingButton;
-	private Button sliceButton, eventButton;
+    private Label statusLabel, userLabel, roleLabel, loggerLabel;
+    private Button startStreamingButton, stopStreamingButton, startRecordingButton, stopRecordingButton;
+    private Button sliceButton, eventButton;
     private TextField sliceText, eventText, uploadNameText, uploadEventText, recordNameText, recordsLocationText;
     private IntegerField sliceLenField;
     private Toggle uploadToggle;
+    private Button setCurrentAppWindowButton;
 
     // Telemetry
     private Button telemetryButton;
     private TextField telemetryCategoryText, telemetryTagText;
 
     private bool want_exit, main_menu, menu_changed = true, buffering;
-	private string status = "none", user = "none", role = "none";
+    private string status = "none", user = "none", role = "none";
     uint qsize = 5;  // number of messages to keep
     Queue myLogQueue = new Queue();
     Dictionary<string, Toggle> checkboxes_ui = new Dictionary<string, Toggle>();
@@ -33,12 +35,12 @@ public class SimpleRuntimeUI : MonoBehaviour {
     Dictionary<string, List<string>> properties_values = new Dictionary<string, List<string>>();
     Dictionary<string, string> properties_active = new Dictionary<string, string>();
 
-    private void OnEnable() 
-	{
+    private void OnEnable()
+    {
         audioSource = GetComponent<AudioSource>();
         var uiDocument = GetComponent<UIDocument>();
-		before_visual = uiDocument.rootVisualElement.Q("before");
-		after_visual = uiDocument.rootVisualElement.Q("after");
+        before_visual = uiDocument.rootVisualElement.Q("before");
+        after_visual = uiDocument.rootVisualElement.Q("after");
         checkboxes_visual = uiDocument.rootVisualElement.Q("checkboxes");
         properties_visual = uiDocument.rootVisualElement.Q("properties");
 
@@ -48,7 +50,7 @@ public class SimpleRuntimeUI : MonoBehaviour {
         userLabel = uiDocument.rootVisualElement.Q<Label>("user");
         roleLabel = uiDocument.rootVisualElement.Q<Label>("role");
         loggerLabel = uiDocument.rootVisualElement.Q<Label>("logger");
-		sliceButton = uiDocument.rootVisualElement.Q<Button>("create-slice");
+        sliceButton = uiDocument.rootVisualElement.Q<Button>("create-slice");
         startStreamingButton = uiDocument.rootVisualElement.Q<Button>("start-streaming");
         stopStreamingButton = uiDocument.rootVisualElement.Q<Button>("stop-streaming");
         startRecordingButton = uiDocument.rootVisualElement.Q<Button>("start-recording");
@@ -65,13 +67,14 @@ public class SimpleRuntimeUI : MonoBehaviour {
         crashButton = uiDocument.rootVisualElement.Q<Button>("crash");
         resetButton = uiDocument.rootVisualElement.Q<Button>("reset");
         uploadToggle = uiDocument.rootVisualElement.Q<Toggle>("upload-record");
+        setCurrentAppWindowButton = uiDocument.rootVisualElement.Q<Button>("set-current-app-window");
 
         // Telemetry
         telemetryButton = uiDocument.rootVisualElement.Q<Button>("telemetry-button");
         telemetryCategoryText = uiDocument.rootVisualElement.Q<TextField>("telemetry-category-text");
         telemetryTagText = uiDocument.rootVisualElement.Q<TextField>("telemetry-tag-text");
 
-        string[] checkboxes_list = new string[] {"Buffering", "Full Screen", "Camera", "Microphone", "Audio", "Cursor", "Ultra Low Latency" };
+        string[] checkboxes_list = new string[] { "Buffering", "Full Screen", "Camera", "Microphone", "Audio", "Cursor", "Ultra Low Latency" };
         foreach (string checkbox_name in checkboxes_list)
         {
             var checkbox_field = new Toggle(checkbox_name);
@@ -92,8 +95,8 @@ public class SimpleRuntimeUI : MonoBehaviour {
             var property_field = new DropdownField(property_name);
             properties_visual.Add(property_field);
             properties_ui.Add(property_name, property_field);
-			properties_values.Add(property_name, new List<string>());
-			properties_active.Add(property_name, "");
+            properties_values.Add(property_name, new List<string>());
+            properties_active.Add(property_name, "");
             property_field.RegisterCallback<ChangeEvent<string>>(OnPropertyChanged);
         }
 
@@ -115,12 +118,14 @@ public class SimpleRuntimeUI : MonoBehaviour {
         startRecordingButton.RegisterCallback<ClickEvent>(OnStartRecordingClicked);
         stopRecordingButton.RegisterCallback<ClickEvent>(OnStopRecordingClicked);
         telemetryButton.RegisterCallback<ClickEvent>(OnTelemetryButtonClicked);
+        setCurrentAppWindowButton.RegisterCallback<ClickEvent>(OnSetCurrentAppWindowButtonClicked);
 
         Debug.Log(LiveAwareSDK.get_sdk_version_string());
-        LiveAwareSDK.refresh_state();       
+        LiveAwareSDK.refresh_state();
     }
 
-	private void OnDisable() {
+    private void OnDisable()
+    {
         LiveAwareSDK.OnLogMessage -= OnLogReceived;
         LiveAwareSDK.OnStateChanged -= OnStateChanged;
         LiveAwareSDK.OnSelectionPropertyReady -= OnPropertyChanged;
@@ -139,11 +144,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
         startRecordingButton.UnregisterCallback<ClickEvent>(OnStartRecordingClicked);
         stopRecordingButton.UnregisterCallback<ClickEvent>(OnStopRecordingClicked);
         telemetryButton.UnregisterCallback<ClickEvent>(OnTelemetryButtonClicked);
+        setCurrentAppWindowButton.UnregisterCallback<ClickEvent>(OnSetCurrentAppWindowButtonClicked);
     }
 
-	void OnGUI() {
-		if (want_exit)
-		{
+    void OnGUI()
+    {
+        if (want_exit)
+        {
 #if UNITY_STANDALONE
 
             Application.Quit(0);
@@ -152,16 +159,16 @@ public class SimpleRuntimeUI : MonoBehaviour {
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
         }
-		statusLabel.text = status;
-		userLabel.text = user;
+        statusLabel.text = status;
+        userLabel.text = user;
         roleLabel.text = role;
         loggerLabel.text = string.Join("\n", myLogQueue.ToArray());
 
         string[] properties_list = LiveAwareSDK.get_available_selection_properties();
         if (menu_changed)
-		{
-			if (main_menu)
-			{
+        {
+            if (main_menu)
+            {
                 before_visual.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
                 after_visual.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
                 foreach (string property_name in properties_list)
@@ -169,13 +176,13 @@ public class SimpleRuntimeUI : MonoBehaviour {
                     LiveAwareSDK.refresh_selection_property(property_name);
                 }
             }
-			else
-			{
+            else
+            {
                 before_visual.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Initial);
                 after_visual.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
             }
-			menu_changed = false;
-		}
+            menu_changed = false;
+        }
         checkboxes_ui["Buffering"].value = buffering;
         foreach (string property_name in properties_list)
         {
@@ -184,9 +191,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
         }
     }
 
-	private void OnApplicationQuit() {
+    private void OnApplicationQuit()
+    {
         Debug.Log("quitting...");
-		LiveAwareSDK.disconnect();
+        LiveAwareSDK.disconnect();
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)
@@ -197,68 +205,68 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
 
     private void OnLogReceived(string level, string message)
-	{
-		message = "[SDK] " + message;
-		switch (level)
-		{
-			case "error":
-				Debug.LogError(message);
-				HandleLog(message, "", LogType.Error);
+    {
+        message = "[SDK] " + message;
+        switch (level)
+        {
+            case "error":
+                Debug.LogError(message);
+                HandleLog(message, "", LogType.Error);
                 break;
-			case "warning":
+            case "warning":
                 Debug.LogWarning(message);
                 HandleLog(message, "", LogType.Warning);
                 break;
-			case "info":
+            case "info":
                 Debug.Log(message);
                 HandleLog(message, "", LogType.Log);
-				break;
+                break;
             default:
                 Debug.Log(message);
                 break;
-		}
-	}
+        }
+    }
 
-	private void OnStateChanged(string state_type, string new_state)
-	{
+    private void OnStateChanged(string state_type, string new_state)
+    {
         switch (state_type)
-		{
-			case "status":
-				status = new_state;
-				if ((new string[] { "not initialized", "initializing", "initialized", "unauthorized"}).Contains(status))
-				{
-					if (main_menu)
-					{
-						main_menu = false;
-						menu_changed = true;
-					}
-				}
-				else
-				{
+        {
+            case "status":
+                status = new_state;
+                if ((new string[] { "not initialized", "initializing", "initialized", "unauthorized" }).Contains(status))
+                {
+                    if (main_menu)
+                    {
+                        main_menu = false;
+                        menu_changed = true;
+                    }
+                }
+                else
+                {
                     if (!main_menu)
                     {
                         main_menu = true;
                         menu_changed = true;
                     }
                 }
-				break;
-			case "buffering":
-				buffering = (new_state == "enabled");
-				break;
-			case "user":
-				user = new_state;
-				break;
+                break;
+            case "buffering":
+                buffering = (new_state == "enabled");
+                break;
+            case "user":
+                user = new_state;
+                break;
             case "role":
                 role = new_state;
                 break;
         }
     }
 
-	private void OnPropertyChanged(string property_type, string[] available_Values, string active_value)
-	{
+    private void OnPropertyChanged(string property_type, string[] available_Values, string active_value)
+    {
         properties_values[property_type] = new List<string>(available_Values);
-		properties_active[property_type] = active_value;
-	}
+        properties_active[property_type] = active_value;
+    }
 
     private void OnVideoDetailsReady(string video_type, string video_state, string project_id, string event_id, string video_id, string video_name, string video_url)
     {
@@ -268,22 +276,23 @@ public class SimpleRuntimeUI : MonoBehaviour {
     }
 
 
-    private async void OnInitializeClicked(ClickEvent clickEvent) {
+    private async void OnInitializeClicked(ClickEvent clickEvent)
+    {
         await Task.Factory.StartNew(() => LiveAwareLabs.LiveAwareSDK.connect());
-	}
+    }
 
     private void OnExitClicked(ClickEvent clickEvent)
     {
-		want_exit = true;
+        want_exit = true;
     }
 
     private void OnResetClicked(ClickEvent clickEvent)
     {
-		LiveAwareSDK.disconnect();
+        LiveAwareSDK.disconnect();
     }
-    private void OnCrashClicked(ClickEvent evt) 
-	{
-		Debug.Log("Crash Game on purpose");
+    private void OnCrashClicked(ClickEvent evt)
+    {
+        Debug.Log("Crash Game on purpose");
         Utils.ForceCrash(ForcedCrashCategory.Abort);
     }
 
@@ -362,6 +371,10 @@ public class SimpleRuntimeUI : MonoBehaviour {
         {
             audioSource.Stop();
         }*/
+    }
+    private async void OnSetCurrentAppWindowButtonClicked(ClickEvent clickEvent)
+    {
+        await Task.Factory.StartNew(() => LiveAwareLabs.LiveAwareSDK.set_current_app_window());
     }
 
     private async void OnTelemetryButtonClicked(ClickEvent clickEvent)
